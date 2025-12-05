@@ -3,7 +3,9 @@ import { useAuth } from "../lib/useAuth";
 import { files as filesApi } from "../lib/api";
 import logoFallback from "../assets/Impress-Print-Concepts-LOGO.png";
 import SearchBar from "./SearchBar";
+import ProductDropdown from "./ProductDropdown";
 import MegaMenu from "./MegaMenu";
+import MobileMenu from "./MobileMenu";
 import { Page } from "../App";
 
 interface HeaderProps {
@@ -123,6 +125,32 @@ export default function Header({ onLoginClick, currentPage, onNavigate, cartItem
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activeCategory]);
 
+  const handleCategoryHover = (slug: string) => {
+    if (!isDesktop) return;
+    cancelClose();
+    setActiveCategory(slug);
+    setIsMegaOpen(true);
+  };
+
+  const handleCategoryClick = (slug: string) => {
+    if (isDesktop) {
+      // Toggle the mega menu for the clicked category
+      if (activeCategory === slug) {
+        // If clicking the same category, toggle the menu
+        setIsMegaOpen(!isMegaOpen);
+      } else {
+        // If clicking a different category, open the menu for that category
+        setActiveCategory(slug);
+        setIsMegaOpen(true);
+      }
+      cancelClose();
+    } else {
+      onNavigateToCategory(slug);
+      setIsMegaOpen(false);
+      setActiveCategory(null);
+    }
+  };
+
   return (
     <>
       {/* Top Bar */}
@@ -182,9 +210,19 @@ export default function Header({ onLoginClick, currentPage, onNavigate, cartItem
             </div>
             
             <nav className="hidden lg:flex items-center space-x-6 flex-1">
-              <div className="flex-1 flex items-center justify-center">
+              <div className="flex-1 flex items-center justify-center gap-3">
                   <div className="w-full max-w-md">
 <SearchBar onNavigate={(page: string) => onNavigate(page as Page)} onNavigateToCategory={onNavigateToCategory} />
+                  </div>
+                  <div className="hidden md:block">
+                    <ProductDropdown onSelect={(prod) => {
+                      onNavigateToCategory(prod.category);
+                      // defer navigating to product until CategoryPage mounts
+                      setTimeout(() => {
+                        // minimal product payload
+                        onNavigate('product');
+                      }, 50);
+                    }} />
                   </div>
                 </div>
 
@@ -249,6 +287,8 @@ export default function Header({ onLoginClick, currentPage, onNavigate, cartItem
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="text-brown-900 hover:text-yellow-600 p-3 rounded-full hover:bg-yellow-50 transition-colors"
+                aria-expanded={isMenuOpen}
+                aria-label="Toggle menu"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -257,18 +297,10 @@ export default function Header({ onLoginClick, currentPage, onNavigate, cartItem
             </div>
           </div>
 
+          {/* Mobile Menu - Simplified version for immediate actions */}
           {isMenuOpen && (
             <div className="lg:hidden border-t border-yellow-200 bg-white">
               <div className="px-2 pt-2 pb-3 space-y-1">
-                <button
-                  onClick={() => {
-                    onNavigate('cart');
-                    setIsMenuOpen(false);
-                  }}
-                  className="block text-brown-900 hover:text-yellow-600 px-4 py-3 text-base font-heading font-semibold w-full text-left rounded-xl hover:bg-yellow-50 transition-colors"
-                >
-                  Cart ({cartItemCount})
-                </button>
                 <button
                   onClick={() => {
                     onNavigate('cart');
@@ -359,28 +391,17 @@ export default function Header({ onLoginClick, currentPage, onNavigate, cartItem
             }}
             className="flex items-center overflow-x-auto whitespace-nowrap py-2 no-scrollbar justify-center"
           >
-            {categories.map((cat) => (
+            {categories.map((cat, index) => (
               <button
                 key={cat.slug}
                 ref={(el) => {
                   if (el) {
-                    const idx = categories.findIndex((c) => c.slug === cat.slug);
-                    catRefs.current[idx] = el;
+                    catRefs.current[index] = el;
                   }
                 }}
-                onMouseEnter={() => { if (isDesktop) { setActiveCategory(cat.slug); setIsMegaOpen(true); } }}
+                onMouseEnter={() => handleCategoryHover(cat.slug)}
                 onFocus={() => setActiveCategory(cat.slug)}
-                onClick={() => {
-                  if (isDesktop) {
-                    setActiveCategory((prev) => (prev === cat.slug ? null : cat.slug));
-                    setIsMegaOpen((prev) => (activeCategory === cat.slug ? !prev : true));
-                    cancelClose();
-                  } else {
-                    onNavigateToCategory(cat.slug);
-                    setIsMegaOpen(false);
-                    setActiveCategory(null);
-                  }
-                }}
+                onClick={() => handleCategoryClick(cat.slug)}
                 onTouchStart={() => {
                   onNavigateToCategory(cat.slug);
                   setIsMegaOpen(false);
@@ -399,12 +420,27 @@ export default function Header({ onLoginClick, currentPage, onNavigate, cartItem
           <MegaMenu
             category={activeCategory}
             visible={isMegaOpen && !!activeCategory}
+            activeCategoryElement={catRefs.current[categories.findIndex(cat => cat.slug === activeCategory)] || null}
             onNavigateToCategory={(slug) => { onNavigateToCategory(slug); setActiveCategory(null); }}
             onClose={scheduleClose}
             onCancelClose={cancelClose}
           />
         )}
       </div>
+
+      {/* Mobile Menu Drawer */}
+      <MobileMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        categories={categories}
+        currentPage={currentPage}
+        onNavigate={onNavigate}
+        onNavigateToCategory={onNavigateToCategory}
+        cartItemCount={cartItemCount}
+        onLoginClick={onLoginClick}
+        onAdminClick={onAdminClick}
+        user={user}
+      />
     </>
   );
 }

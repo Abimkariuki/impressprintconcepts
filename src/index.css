@@ -1,0 +1,359 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Raleway:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .font-heading {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .font-body {
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .font-script {
+    font-family: 'Dancing Script', cursive;
+  }
+}
+
+/* Utility: hide scrollbars (preserves scroll behavior) */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #741418;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5a0f12;
+}
+
+/* Artistic animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 193, 7, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(255, 193, 7, 0.6); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Artistic text effects */
+.text-shadow-artistic {
+  text-shadow: 2px 2px 4px rgba(116, 20, 24, 0.3);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #741418, #ffc107);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom button styles */
+.btn-artistic {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-artistic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-artistic:hover::before {
+  left: 100%;
+}
+
+/* Logo styling */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 3px solid #ffc107;
+  background: white;
+  padding: 4px;
+  box-shadow: 0 4px 12px rgba(116, 20, 24, 0.15);
+}
+
+.logo-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.logo-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #741418;
+  line-height: 1;
+  margin: 0;
+}
+
+.logo-tagline {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffc107;
+  line-height: 1;
+  margin-top: -2px;
+}
+
+/* Typography hierarchy */
+.heading-primary {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.heading-secondary {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.heading-tertiary {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.body-text {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.body-text-medium {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.script-text {
+  font-family: 'Dancing Script', cursive;
+  font-weight: 600;
+}
+
+/* CSS Variables for consistent styling */
+:root {
+  --brown-900: #741418;
+  --yellow-500: #ffc107;
+  --yellow-100: #fff9e6;
+  --gray-50: #f9f9f9;
+  --gray-300: #e0e0e0;
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem;  /* 8px */
+  --spacing-md: 1rem;    /* 16px */
+  --spacing-lg: 1.5rem;  /* 24px */
+  --border-radius: 0.5rem; /* 8px */
+  --transition-duration: 200ms;
+  --scrollbar-width: 6px;
+}
+
+/* Mega menu & smooth scroll styles */
+.mega-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 60;
+  transition: opacity var(--transition-duration) ease, transform var(--transition-duration) ease;
+}
+
+/* Arrow indicator for active menu item */
+.category-arrow {
+  position: absolute;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 1px solid var(--yellow-100);
+  transform: rotate(45deg);
+  z-index: 61;
+  transition: left var(--transition-duration) ease;
+}
+
+.mega-menu-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+.mega-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: var(--spacing-sm); /* Reduced from 24px to 8px */
+  align-items: start;
+}
+
+.mega-menu .col h4 { 
+  font-weight: 700; 
+  margin-bottom: var(--spacing-sm); 
+  color: #333; 
+  font-size: 0.9rem;
+}
+
+.mega-menu .col ul { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
+}
+
+.mega-menu .col li { 
+  margin-bottom: var(--spacing-xs); 
+}
+
+.mega-menu .col button { 
+  background: none; 
+  border: none; 
+  padding: var(--spacing-xs) 0; /* Reduced padding */
+  cursor: pointer; 
+  width: 100%;
+  text-align: left;
+  font-size: 0.85rem;
+  transition: color var(--transition-duration) ease;
+}
+
+.mega-menu .col a, 
+.mega-menu .col button { 
+  color: #555; 
+  text-decoration: none; 
+}
+
+.mega-menu .col a:hover, 
+.mega-menu .col button:hover { 
+  color: var(--brown-900); 
+  text-decoration: underline; 
+}
+
+.mega-menu .promo { 
+  grid-column: span 1; 
+  display: flex; 
+  flex-direction: column; 
+  gap: var(--spacing-sm);
+}
+
+.mega-menu .promo img { 
+  border-radius: var(--border-radius);
+  width: 100%; 
+  height: auto; 
+  object-fit: cover; 
+}
+
+.smooth-scroll { 
+  scroll-behavior: smooth; 
+}
+
+.mega-menu .cols-scroll { 
+  max-height: 320px; 
+  overflow-y: auto;
+  padding-right: var(--spacing-xs);
+}
+
+/* Slim scrollbars */
+.mega-menu .cols-scroll::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+.mega-menu .cols-scroll::-webkit-scrollbar-track {
+  background: var(--gray-50);
+  border-radius: calc(var(--scrollbar-width) / 2);
+}
+
+.mega-menu .cols-scroll::-webkit-scrollbar-thumb {
+  background: var(--brown-900);
+  border-radius: calc(var(--scrollbar-width) / 2);
+}
+
+.mega-menu .cols-scroll::-webkit-scrollbar-thumb:hover {
+  background: #5a0f12;
+}
+
+/* Firefox scrollbar */
+.mega-menu .cols-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--brown-900) var(--gray-50);
+}
+
+/* Hide mega menu on small screens (use mobile nav instead) */
+@media (max-width: 1023px) {
+  .mega-menu { 
+    display: none !important; 
+  }
+}
+
+/* Small niceties */
+.mega-menu .promo h3 { 
+  margin: 0; 
+  font-size: 1rem;
+}
+
+.mega-menu .promo p { 
+  margin: 0; 
+  font-size: 0.85rem;
+}
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Utility for responsive images in content sections */
+.image-responsive {
+  display: block;
+  width: 100%;
+  height: auto;
+}
